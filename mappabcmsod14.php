@@ -1,36 +1,6 @@
 <?php
 
 
-$url = 'https://docs.google.com/spreadsheet/pub?key=0AnLypt4fNj0hdFV4ZGpxSTNRR29hR3dLVHpKUVVuQ3c&output=csv';
-$file = "bcsod.csv";
-$fileok = "bcsod1.csv";
-$fileok1 = "bcsod2.csv";
-$fileok2 = "bcsod3.csv";
-$src = fopen($url, 'r');
-
-$dest = fopen($file, 'w');
-stream_copy_to_stream($src, $dest);
-
-
-$search="Lat";
-$replace="lat";
-
-$output = passthru("sed -e 's/$search/$replace/g' $file > $fileok");
-
-$search1="Lon";
-$replace1="lng";
-
-$output1 = passthru("sed -e 's/$search1/$replace1/g' $fileok > $fileok1");
-
-$search2=",";
-$replace2=";";
-
-$output2 = passthru("sed -e 's/$search2/$replace2/g' $fileok1 > $fileok2");
-
-//sleep(1);
-
-//echo stream_copy_to_stream($src, $dest) . "";
-
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -40,23 +10,21 @@ $output2 = passthru("sed -e 's/$search2/$replace2/g' $fileok1 > $fileok2");
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <meta property="og:image" content="http://lucacorsato.it/wp-content/uploads/2014/03/SOD_14_timbro-150x149.png"/>
-      <!-- Leaflet 0.5: https://github.com/CloudMade/Leaflet-->
-		<link rel="stylesheet" href="http://joker-x.github.io/Leaflet.geoCSV/lib/leaflet.css" />
-		<!--[if lte IE 8]> <link rel="stylesheet" href="http://joker-x.github.io/Leaflet.geoCSV/lib/leaflet.ie.css" />  <![endif]-->  
-		<script src="http://joker-x.github.io/Leaflet.geoCSV/lib/leaflet.js"></script>
 
-		<!-- MarkerCluster https://github.com/danzel/Leaflet.markercluster -->
-		<link rel="stylesheet" href="http://joker-x.github.io/Leaflet.geoCSV/lib/MarkerCluster.css" />
-		<link rel="stylesheet" href="http://joker-x.github.io/Leaflet.geoCSV/lib/MarkerCluster.Default.css" />
-		<!--[if lte IE 8]> <link rel="stylesheet" href="http://joker-x.github.io/Leaflet.geoCSV/lib/MarkerCluster.Default.ie.css" /> <![endif]-->
-		<script src="http://joker-x.github.io/Leaflet.geoCSV/lib/leaflet.markercluster-src.js"></script>
+  <link rel="stylesheet" href="http://necolas.github.io/normalize.css/2.1.3/normalize.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+        <link rel="stylesheet" href="MarkerCluster.css" />
 
-		<!-- GeoCSV: https://github.com/joker-x/Leaflet.geoCSV -->
-		<script src="leaflet.geocsv-src.js"></script>
-		<script src="leaflet-hash.js"></script>
-		<!-- jQuery 1.8.3: http://jquery.com/ -->
-		<script src="http://joker-x.github.io/Leaflet.geoCSV/lib/jquery.js"></script>
+        <link rel="stylesheet" href="MarkerCluster.Default.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+   <script src="leaflet.markercluster.js"></script>
+<script src="leaflet-hash.js"></script>
 
+
+<script type="text/javascript">
+function microAjax(B,A){this.bindFunction=function(E,D){return function(){return E.apply(D,[D])}};this.stateChange=function(D){if(this.request.readyState==4){this.callbackFunction(this.request.responseText)}};this.getRequest=function(){if(window.ActiveXObject){return new ActiveXObject("Microsoft.XMLHTTP")}else{if(window.XMLHttpRequest){return new XMLHttpRequest()}}return false};this.postBody=(arguments[2]||"");this.callbackFunction=A;this.url=B;this.request=this.getRequest();if(this.request){var C=this.request;C.onreadystatechange=this.bindFunction(this.stateChange,this);if(this.postBody!==""){C.open("POST",B,true);C.setRequestHeader("X-Requested-With","XMLHttpRequest"); C.setRequestHeader("Content-type","application/x-www-form-urlencoded");C.setRequestHeader("Connection","close")}else{C.open("GET",B,true)}C.send(this.postBody)}};
+</script>
 		<style>	
 		html, body, #mapa {
 			margin: 0;
@@ -115,7 +83,7 @@ $output2 = passthru("sed -e 's/$search2/$replace2/g' $fileok1 > $fileok2");
 			background-color:#666;
 			color:#fff;
 			font-size:2em;
-			padding:32% 40%;
+			padding:32% 10%;
 			z-index:10;
 opacity:0.6;
   filter:alpha(opacity=60); /* For IE8 and earlier */
@@ -369,89 +337,102 @@ position:fixed;
 
 
 
-	<div id="cargando">Sto caricando i dati...</div>
+ <div id="cargando">Sto caricando i dati...</div> 
 
 
 <div id="sodlogo" style="leaflet-popup-content-wrapper">
 <a href="http://www.spaghettiopendata.org" target="_blank"><img src="http://lucacorsato.it/wp-content/uploads/2014/03/SOD_14_timbro-150x149.png" width="60px"></a><br /></div>
 <div id="filtradiv" style="leaflet-popup-content-wrapper">
-<select id="start" onchange="filtra();">
+<select id="start" onchange="filtra(this.value);">
 
   <option value="PPP">Filtra i beni</option>
 
-  <option value="abitazione">Abitazione</option>
+  <option value="Abitazione">Abitazione</option>
 
-  <option value="terreno">Terreno</option>
+  <option value="Terreno">Terreno</option>
 
-  <option value="locale">Locale</option>
+  <option value="Locale">Locale</option>
 
-  <option value="altri">Altri beni immobili</option>
+  <option value="Altri beni immobili">Altri beni immobili</option>
 
-  <option value="fabbricato">Fabbricato</option>
+  <option value="Fabbricato">Fabbricato</option>
 
-<option value="capannone">Capannone</option>
+<option value="Capannone">Capannone</option>
 
 
 
 </select>
 
  </div>
-<script>
+<script type="text/javascript">
 
 //;$(function() {
 
-var mapa = L.map('mapa', {attributionControl:true}).setView([40.46, -3.75], 5);
+var lat=42.302,
+        lon=15.601,
+        zoom=6;
+        var osm = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'});
+		var mapquest = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {subdomains: '1234', maxZoom: 18, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'});        
 
-//L.tileLayer('http://{s}.tile.cloudmade.com/3a83164a47874169be4cabc2e8b8c449/43782/256/{z}/{x}/{y}.png', {maxZoom: 19, attribution: 'Map Data &copy; <a //href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://www.spaghettiopendata.org">#SOD14</a> Beni Confiscati alla mafia'}).addTo(mapa);
-
-var baseLayer= L.tileLayer('http://{s}.tile.cloudmade.com/3a83164a47874169be4cabc2e8b8c449/43782/256/{z}/{x}/{y}.png', {maxZoom: 19, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="https://twitter.com/Piersoft" target="_blank">@Piersoft</a> for <a href="http://www.spaghettiopendata.org">#SOD14</a> Beni Confiscati alla mafia'});
-
-
-var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="https://twitter.com/Piersoft" target="_blank">@Piersoft</a> for <a href="http://www.spaghettiopendata.org">#SOD14</a> Beni Confiscati alla mafia'});
-
-osmLayer.addTo(mapa);
-
+        var map = new L.Map('mapa', {
+                    editInOSMControl: true,
+            editInOSMControlOptions: {
+                position: "topright"
+            },
+            center: new L.LatLng(lat, lon),
+            zoom: zoom,
+            layers: [osm]
+        });
         
-var int=0;
-	
- var cluster0='';
- var cluster='';
- var cluster1='';
- var cluster2='';
- var cluster3='';
-var cluster4='';
-var cluster5='';
-var cluster6='';
-var filtervar='';
-var button= "YES";
-  
-var hash = new L.Hash(mapa);
+        var baseMaps = {
+    "Mapnik": osm,
+    "Mapquest Open": mapquest       
+        };
+        L.control.layers(baseMaps).addTo(map);
 
-var bankias = L.geoCsv(null, {
-	onEachFeature: function (feature, layer) {
-		var popup = '';
+//var hash = new L.Hash(map);
+
+ var ico=L.icon({iconUrl:'icccc.png', iconSize:[20,20],iconAnchor:[10,0]});
+    var markers = L.markerClusterGroup();
+
 var pin='';
 
+          
+var hash = new L.Hash(map);
 
+function start(){
+//map.removeLayer(markers);
+map.removeLayer(markers1);
+
+microAjax('bcmafia.json',function (res) { 
+var feat=JSON.parse(res);
+loadLayer(feat);
+
+ } );
+ 
+ }
+ 
+  
+ function loadLayer(url)
+        {
+        
+
+                var myLayer = L.geoJson(url,{
+                        onEachFeature:function onEachFeature(feature, layer) {
+                           
+                             if (feature.properties) {
+		var popup = '';
+var pin='';
+//popup += '<b>Link</b><br/>'+feature.properties.id+'<br /><br />';
 feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
 popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
 popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
 popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
+                             layer.bindPopup(popup);
+                                }
+                        },
 
-		for (var clave in feature.properties) {
-
-
-			var title = bankias.getPropertyTitle(clave);
-			//popup += '<b>'+title+'</b><br />'+feature.properties[clave]+'<br /><br />';
-
-		}
-		layer.bindPopup(popup, {
-                                maxWidth: "210",
-				 maxHeight: "250",
-                                closeButton: false
-                            });
-	},
-	pointToLayer: function (feature, latlng) {
+                        pointToLayer: function (feature, latlng) {
 if (feature.properties.tipo_scr =="Terreno") {pin='pinarancio.png'};
 if (feature.properties.tipo_scr =="Abitazione") {pin='pinrossoe.png'};
 if (feature.properties.tipo_scr =="Locale") {pin='pingiallo.png'};
@@ -459,436 +440,142 @@ if (feature.properties.tipo_scr =="Fabbricato") {pin='pingrigio.png'};
 if (feature.properties.tipo_scr =="Altri beni immobili") {pin='pinarancioforte.png'};
 if (feature.properties.tipo_scr =="Capannone") {pin='pinnero.png'};
 
+                                        var marker = new L.marker(latlng, {
+                                                                  icon:L.icon({
+                                                                              iconUrl: pin,
+                                                                              shadowUrl: 'marker-shadow.png',
+                                                                              iconSize: [15,15],
+                                                                              shadowSize:   [15, 7],
+                                                                              shadowAnchor: [5, 2]
+                                                                              })
+                                                                  });
+                                        
+                        markers[feature.properties.id] = marker;
+                        return marker;
 
+                        }
+                }).addTo(markers);
 
-		return L.marker(latlng, {
-			icon:L.icon({
-				iconUrl: pin,
-				shadowUrl: 'marker-shadow.png',
-				iconSize: [15,15],
-				shadowSize:   [15, 7],
-				shadowAnchor: [5, 2]
-			})
-		});
-	},
-	firstLineTitles: true
-});
+      markers.addLayer(myLayer);
+       map.addLayer(markers);
+map.fitBounds(markers.getBounds());
+document.getElementById("cargando").remove();
 
-var terreno = L.geoCsv(null, {
-	onEachFeature: function (feature, layer) {
-		var popup = '';
+        }
 
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
-popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
-popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
+ 
+ 
+var filtro='';
+var markers1 = L.markerClusterGroup();
 
-		for (var clave in feature.properties) {
+function fadeout (){
 
+//$('#cargando').delay(500).fadeOut('slow');
+}
 
-			var title = terreno.getPropertyTitle(clave);
-			//popup += '<b>'+title+'</b><br />'+feature.properties[clave]+'<br /><br />';
-
-		}
-		layer.bindPopup(popup, {
-                                maxWidth: "210",
-				 maxHeight: "250",
-                                closeButton: false
-                            });
-	}, 
-filter: function(feature, layer) {
-
-if (feature.properties.tipo_scr =="Terreno") {
-					
-return true;
-				}
-	return false;
-
-    },
-	pointToLayer: function (feature, latlng) {
-		return L.marker(latlng, {
-			icon:L.icon({
-				iconUrl: 'pinarancio.png',
-				shadowUrl: 'marker-shadow.png',
-				iconSize: [15,15],
-				shadowSize:   [15, 7],
-				shadowAnchor: [5, 2]
-			})
-		});
-	},
-	firstLineTitles: true	
-		
-});
-
-
-var abitazione = L.geoCsv(null, {
-	onEachFeature: function (feature, layer) {
-		var popup = '';
-
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
-popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
-popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
-
-		for (var clave in feature.properties) {
-
-
-			var title = abitazione.getPropertyTitle(clave);
-			//popup += '<b>'+title+'</b><br />'+feature.properties[clave]+'<br /><br />';
-
-		}
-		layer.bindPopup(popup, {
-                                maxWidth: "210",
-				 maxHeight: "250",
-                                closeButton: false
-                            });
-	}, 
-filter: function(feature, layer) {
-
-if (feature.properties.tipo_scr =="Abitazione") {
-					
-return true;
-				}
-	return false;
-
-    },
-	pointToLayer: function (feature, latlng) {
-		return L.marker(latlng, {
-			icon:L.icon({
-				iconUrl: 'pinrossoe.png',
-				shadowUrl: 'marker-shadow.png',
-				iconSize: [15,15],
-				shadowSize:   [15, 7],
-				shadowAnchor: [5, 2]
-			})
-		});
-	},
-	firstLineTitles: true
-	
-		
-});
-		
-var locale = L.geoCsv(null, {
-	onEachFeature: function (feature, layer) {
-		var popup = '';
-
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
-popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
-popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
-
-		for (var clave in feature.properties) {
-
-
-			var title = terreno.getPropertyTitle(clave);
-			//popup += '<b>'+title+'</b><br />'+feature.properties[clave]+'<br /><br />';
-
-		}
-		layer.bindPopup(popup, {
-                                maxWidth: "210",
-				 maxHeight: "250",
-                                closeButton: false
-                            });
-	}, 
-filter: function(feature, layer) {
-
-if (feature.properties.tipo_scr =="Locale") {
-					
-return true;
-				}
-	return false;
-
-    },
-	pointToLayer: function (feature, latlng) {
-		return L.marker(latlng, {
-			icon:L.icon({
-				iconUrl: 'pingiallo.png',
-				shadowUrl: 'marker-shadow.png',
-				iconSize: [15,15],
-				shadowSize:   [15, 7],
-				shadowAnchor: [5, 2]
-			})
-		});
-	},
-	firstLineTitles: true	
-		
-});
-
-var fabbricato = L.geoCsv(null, {
-	onEachFeature: function (feature, layer) {
-		var popup = '';
-
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
-popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
-popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
-
-		for (var clave in feature.properties) {
-
-
-			var title = terreno.getPropertyTitle(clave);
-			//popup += '<b>'+title+'</b><br />'+feature.properties[clave]+'<br /><br />';
-
-		}
-		layer.bindPopup(popup, {
-                                maxWidth: "210",
-				 maxHeight: "250",
-                                closeButton: false
-                            });
-	}, 
-filter: function(feature, layer) {
-
-if (feature.properties.tipo_scr =="Fabbricato") {
-					
-return true;
-				}
-	return false;
-
-    },
-	pointToLayer: function (feature, latlng) {
-		return L.marker(latlng, {
-			icon:L.icon({
-				iconUrl: 'pingrigio.png',
-				shadowUrl: 'marker-shadow.png',
-				iconSize: [15,15],
-				shadowSize:   [15, 7],
-				shadowAnchor: [5, 2]
-			})
-		});
-	},
-	firstLineTitles: true	
-		
-});
-
-var altri = L.geoCsv(null, {
-	onEachFeature: function (feature, layer) {
-		var popup = '';
-
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
-popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
-popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
-
-		for (var clave in feature.properties) {
-
-
-			var title = terreno.getPropertyTitle(clave);
-			//popup += '<b>'+title+'</b><br />'+feature.properties[clave]+'<br /><br />';
-
-		}
-		layer.bindPopup(popup, {
-                                maxWidth: "210",
-				 maxHeight: "250",
-                                closeButton: false
-                            });
-	}, 
-filter: function(feature, layer) {
-
-if (feature.properties.tipo_scr =="Altri beni immobili") {
-					
-return true;
-				}
-	return false;
-
-    },
-	pointToLayer: function (feature, latlng) {
-		return L.marker(latlng, {
-			icon:L.icon({
-				iconUrl: 'pinarancioforte.png',
-				shadowUrl: 'marker-shadow.png',
-				iconSize: [15,15],
-				shadowSize:   [15, 7],
-				shadowAnchor: [5, 2]
-			})
-		});
-	},
-	firstLineTitles: true	
-		
-});
-
-var capannone = L.geoCsv(null, {
-	onEachFeature: function (feature, layer) {
-		var popup = '';
-
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
-popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
-popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
-
-		for (var clave in feature.properties) {
-
-
-			var title = abitazione.getPropertyTitle(clave);
-			//popup += '<b>'+title+'</b><br />'+feature.properties[clave]+'<br /><br />';
-
-		}
-		layer.bindPopup(popup, {
-                                maxWidth: "210",
-				 maxHeight: "250",
-                                closeButton: false
-                            });
-	}, 
-filter: function(feature, layer) {
-
-if (feature.properties.tipo_scr =="Capannone") {
-					
-return true;
-				}
-	return false;
-
-    },
-	pointToLayer: function (feature, latlng) {
-		return L.marker(latlng, {
-			icon:L.icon({
-				iconUrl: 'pinnero.png',
-				shadowUrl: 'marker-shadow.png',
-				iconSize: [15,15],
-				shadowSize:   [15, 7],
-				shadowAnchor: [5, 2]
-			})
-		});
-	},
-	firstLineTitles: true
-	
-		
-});
-
-$.ajax ({
-	type:'GET',
-	dataType:'text',
-	url:'bcsod3.csv',
-   error: function() {
-     alert('No si possono caricare i dati, riprova');
-   },
-	success: function(csv) {
-      		cluster = new L.MarkerClusterGroup();
-		
-		bankias.addData(csv);
-		cluster.addLayer(bankias);
-		
-
-
-	},
-   complete: function() {
-	mapa.addLayer(cluster);
-	mapa.fitBounds(cluster.getBounds());
-
-      $('#cargando').delay(500).fadeOut('slow');
-   }
-});
-
-
-
-function filtra()
-{ 
-
-var start = document.getElementById("start").value;
-
-
-mapa.removeLayer(cluster3);
-mapa.removeLayer(cluster4);
-mapa.removeLayer(cluster1);
-mapa.removeLayer(cluster);
-mapa.removeLayer(cluster6);
-mapa.removeLayer(cluster2);
-mapa.removeLayer(cluster5);	
-alert('Per un bug noto il filtro va applicato 2 volte');
-
-if (start == "PPP"){
+function filtra(value)
+{    
+ 
+if (value == "PPP"){
 
 	  }
 
-	  else
+else
 {
-//$("#cargando").show();
-$.ajax ({
-	
-	dataType:'text',
-	url:'bcsod3.csv',
-   error: function() {
-     alert('No si possono caricare i dati, riprova');
-   },
-	success: function(csv) {
-	
 
-if (start =="abitazione" ){
-cluster3 = new L.MarkerClusterGroup();
-		abitazione.addData(csv);
+var iDiv = document.createElement('div');
 
-		cluster3.addLayer(abitazione);
+iDiv.id = 'cargando';
+iDiv.className = 'cargando';
+document.getElementsByTagName('body')[0].appendChild(iDiv);
 
-mapa.addLayer(cluster3);
-mapa.fitBounds(cluster3.getBounds());
 
+filtro='';
+map.removeLayer(markers);
+map.removeLayer(markers1);
+markers1='';
+markers1=L.markerClusterGroup();
+
+markers='';
+markers=L.markerClusterGroup();
+filtro=value;
+microAjax('bcmafia.json',function (res1) { 
+var feat1=JSON.parse(res1);
+
+if (filtro == "tutti") {
+
+start();
+
+}else{
+loadLayerF(feat1);
 }
-if (start =="terreno"){
-cluster1 = new L.MarkerClusterGroup();
-		terreno.addData(csv);
-		cluster1.addLayer(terreno);
-mapa.addLayer(cluster1);
-mapa.fitBounds(cluster1.getBounds());
-
-}
-if (start =="fabbricato"){
-cluster4 = new L.MarkerClusterGroup();
-		fabbricato.addData(csv);
-		cluster4.addLayer(fabbricato);
-mapa.addLayer(cluster4);
-mapa.fitBounds(cluster4.getBounds());
-
-}
-if (start =="altri"){
-cluster5 = new L.MarkerClusterGroup();
-		altri.addData(csv);
-		cluster5.addLayer(altri);
-mapa.addLayer(cluster5);
-mapa.fitBounds(cluster5.getBounds());
-
-}
-if (start =="capannone"){
-cluster6 = new L.MarkerClusterGroup();
-		capannone.addData(csv);
-		cluster6.addLayer(capannone);
-mapa.addLayer(cluster6);
-mapa.fitBounds(cluster6.getBounds());
-
-}
-if (start =="locale"){
-cluster2 = new L.MarkerClusterGroup();
-		locale.addData(csv);
-		cluster2.addLayer(locale);
-mapa.addLayer(cluster2);
-mapa.fitBounds(cluster2.getBounds());
-
-}
-	},
-   complete: function() {
-	  
-
-  $('#cargando').delay(500).fadeOut('slow');
-   }
-});
-
-
-}
+ } );
+ 
 }
 
+}
 
- var overlays = {
-                "Abitazione": abitazione,
-                "Terreno": terreno
-            
-            };
+ function loadLayerF(url)
+        {
+                var myLayer1 = L.geoJson(url,{
+                        onEachFeature:function onEachFeature(feature, layer) {
+                           
+                             if (feature.properties) {
+		var popup = '';
+var pin='';
+//popup += '<b>Link</b><br/>'+feature.properties.id+'<br /><br />';
+feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
+popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
+popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
+popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
+                             layer.bindPopup(popup);
+                                }                        }, 
+                       
+filter: function(feature, layer) {
 
-var layerControl = new L.Control.Layers({
-		'Cloudmade': baseLayer,
-		'OSM': osmLayer
-	});
+if (feature.properties.tipo_scr ==filtro) {
+					
+return true;
+				}
+	return false;
 
-layerControl.addTo(mapa);
+    },
+                        pointToLayer: function (feature, latlng) {
+                                        if (feature.properties.tipo_scr =="Terreno") {pin='pinarancio.png'};
+if (feature.properties.tipo_scr =="Abitazione") {pin='pinrossoe.png'};
+if (feature.properties.tipo_scr =="Locale") {pin='pingiallo.png'};
+if (feature.properties.tipo_scr =="Fabbricato") {pin='pingrigio.png'};
+if (feature.properties.tipo_scr =="Altri beni immobili") {pin='pinarancioforte.png'};
+if (feature.properties.tipo_scr =="Capannone") {pin='pinnero.png'};
 
-//});
+
+                                         var marker = new L.marker(latlng, {
+                                                                   icon:L.icon({
+                                                                               iconUrl: pin,
+                                                                               shadowUrl: 'marker-shadow.png',
+                                                                               iconSize: [15,15],
+                                                                               shadowSize:   [15, 7],
+                                                                               shadowAnchor: [5, 2]
+                                                                               })
+                                                                   });
+                                         
+                        markers1[feature.properties.id] = marker;
+                        return marker;
+
+                        }
+                }).addTo(markers1);
+
+      markers1.addLayer(myLayer1);
+    map.addLayer(markers1);
+map.fitBounds(markers1.getBounds());
+document.getElementById("cargando").remove();
+        }
+
+
+
+start();
+
+
 </script>
-
 	</body>
 </html>
