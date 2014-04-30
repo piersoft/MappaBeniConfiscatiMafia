@@ -291,8 +291,9 @@ position:fixed;
         box-shadow: 0 3px 14px rgba(0,0,0,0.4)
 }
 
-#div.pop {
-max-width: 600px;
+.pop {
+max-width: 250px;
+overflow:hidden;height:50px;line-height:50px;
 }
 #sodlogo{
 position:fixed;
@@ -342,6 +343,9 @@ position:fixed;
 
 <div id="sodlogo" style="leaflet-popup-content-wrapper">
 <a href="http://www.spaghettiopendata.org" target="_blank"><img src="http://lucacorsato.it/wp-content/uploads/2014/03/SOD_14_timbro-150x149.png" width="60px"></a><br /></div>
+
+
+
 <div id="filtradiv" style="leaflet-popup-content-wrapper">
 <select id="start" onchange="filtra(this.value);">
 
@@ -424,11 +428,15 @@ loadLayer(feat);
 		var popup = '';
 var pin='';
 //popup += '<b>Link</b><br/>'+feature.properties.id+'<br /><br />';
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
+feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">Link</a></div>';
 popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
 popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
-                             layer.bindPopup(popup);
+popup += '<b>'+feature.properties.sourcepageurl+'</b>';
+                             layer.bindPopup(popup, {
+                                maxWidth: "210",
+				 maxHeight: "200",
+                                closeButton: true
+                            });
                                 }
                         },
 
@@ -524,11 +532,15 @@ loadLayerF(feat1);
 		var popup = '';
 var pin='';
 //popup += '<b>Link</b><br/>'+feature.properties.id+'<br /><br />';
-feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">'+feature.properties.sourcepageurl+'</a></div>';
+feature.properties.sourcepageurl='<div class="pop"><a href="'+feature.properties.sourcepageurl+'" target="_blank">Link</a></div>';
 popup +='<b>Categoria</b><br/>'+feature.properties.categoria+'<br /><br />';
 popup += '<b>Tipo</b><br/>'+feature.properties.tipo_scr+'<br /><br />';
-popup += '<b>Link</b><br/>'+feature.properties.sourcepageurl+'<br /><br />';
-                             layer.bindPopup(popup);
+popup += '<b>'+feature.properties.sourcepageurl+'</b>';
+                             layer.bindPopup(popup, {
+                                maxWidth: "210",
+				 maxHeight: "200",
+                                closeButton: true
+                            });
                                 }                        }, 
                        
 filter: function(feature, layer) {
