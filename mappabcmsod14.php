@@ -10,7 +10,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <meta property="og:image" content="http://lucacorsato.it/wp-content/uploads/2014/03/SOD_14_timbro-150x149.png"/>
-
+ <link href="http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
+ 
   <link rel="stylesheet" href="http://necolas.github.io/normalize.css/2.1.3/normalize.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
@@ -21,6 +22,8 @@
    <script src="leaflet.markercluster.js"></script>
 <script src="leaflet-hash.js"></script>
 
+  <link rel="stylesheet" type="text/css" href="leaflet.social.css" />  
+<script type='text/javascript' src="leaflet.social.js"></script>
 
 <script type="text/javascript">
 function microAjax(B,A){this.bindFunction=function(E,D){return function(){return E.apply(D,[D])}};this.stateChange=function(D){if(this.request.readyState==4){this.callbackFunction(this.request.responseText)}};this.getRequest=function(){if(window.ActiveXObject){return new ActiveXObject("Microsoft.XMLHTTP")}else{if(window.XMLHttpRequest){return new XMLHttpRequest()}}return false};this.postBody=(arguments[2]||"");this.callbackFunction=A;this.url=B;this.request=this.getRequest();if(this.request){var C=this.request;C.onreadystatechange=this.bindFunction(this.stateChange,this);if(this.postBody!==""){C.open("POST",B,true);C.setRequestHeader("X-Requested-With","XMLHttpRequest"); C.setRequestHeader("Content-type","application/x-www-form-urlencoded");C.setRequestHeader("Connection","close")}else{C.open("GET",B,true)}C.send(this.postBody)}};
@@ -327,8 +330,8 @@ position:fixed;
 }
 #filtradiv{
 position:fixed;
-			top:130px;
-			right:5px;
+			top:10px;
+			right:30%;
 
 }
 		</style>
@@ -338,7 +341,7 @@ position:fixed;
 
 
 
- <div id="cargando">Sto caricando i dati...</div> 
+ <!--<div id="cargando">Sto caricando i dati...</div> -->
 
 
 <div id="sodlogo" style="leaflet-popup-content-wrapper">
@@ -375,8 +378,8 @@ position:fixed;
 var lat=42.302,
         lon=15.601,
         zoom=6;
-        var osm = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'});
-		var mapquest = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {subdomains: '1234', maxZoom: 18, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'});        
+        var osm = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://spaghetti-open-data.github.io/beni-confiscati-aperti/">Progetto Confiscati Bene by SOD</a>'});
+		var mapquest = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {subdomains: '1234', maxZoom: 18, attribution: 'Map Data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://spaghetti-open-data.github.io/beni-confiscati-aperti/">Progetto Confiscati Bene by SOD</a>'});        
 
         var map = new L.Map('mapa', {
                     editInOSMControl: true,
@@ -394,6 +397,9 @@ var lat=42.302,
         };
         L.control.layers(baseMaps).addTo(map);
 
+L.control.social({default_text: "CONFISCATI BENE - by Spaghetti OpenData"})
+               .addTo(map);
+
 //var hash = new L.Hash(map);
 
  var ico=L.icon({iconUrl:'icccc.png', iconSize:[20,20],iconAnchor:[10,0]});
@@ -405,6 +411,8 @@ var pin='';
 var hash = new L.Hash(map);
 
 function start(){
+
+
 //map.removeLayer(markers);
 map.removeLayer(markers1);
 
@@ -467,7 +475,7 @@ if (feature.properties.tipo_scr =="Capannone") {pin='pinnero.png'};
       markers.addLayer(myLayer);
        map.addLayer(markers);
 map.fitBounds(markers.getBounds());
-document.getElementById("cargando").remove();
+document.getElementById('cargando').remove();
 
         }
 
@@ -495,7 +503,7 @@ var iDiv = document.createElement('div');
 
 iDiv.id = 'cargando';
 iDiv.className = 'cargando';
-document.getElementsByTagName('body')[0].appendChild(iDiv);
+//document.getElementsByTagName('body')[0].appendChild(iDiv);
 
 
 filtro='';
@@ -580,7 +588,7 @@ if (feature.properties.tipo_scr =="Capannone") {pin='pinnero.png'};
       markers1.addLayer(myLayer1);
     map.addLayer(markers1);
 map.fitBounds(markers1.getBounds());
-document.getElementById("cargando").remove();
+document.getElementById('cargando').remove();
         }
 
 
